@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body id="chat">
+    <h1>Hello world</h1>
+
+    <ul id="messages">
+        <li v-repeat="message: messages">{{ message }}</li>
+    </ul>
+    <form v-on="submit:send">
+        <input v-model="message">
+        <button>Send</button>
+    </form>
+
+
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/0.12.15/vue.min.js"></script>
+    <script>
+        var socket = io();
+
+        new Vue({
+
+            el:'#chat',
+
+            data: {
+                messages : [],
+                message:''
+            },
+
+            ready:function(){
+
+                socket.on('chat.message',function(message){
+
+                     this.messages.push(message);
+
+                }.bind(this));
+
+            },
+
+            methods : {
+                send:function(e){
+                   socket.emit('chat.message',this.message);
+                    e.preventDefault();
+                }
+
+            }
+
+
+
+        })
+
+    </script>
+
+</body>
+</html>
